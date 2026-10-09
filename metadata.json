@@ -1,0 +1,6 @@
+{
+  "name": "Hostel Laundry Slot Manager",
+  "description": "Interactive hostel laundry slot booking, real-time machine availability, and schedule management application.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

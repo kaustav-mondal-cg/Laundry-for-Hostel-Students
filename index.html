@@ -1,0 +1,991 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hostel Laundry Slot Manager</title>
+    <meta name="description" content="Interactive hostel laundry slot booking, real-time machine availability, and schedule management application." />
+    <meta property="og:title" content="Hostel Laundry Slot Manager" />
+    <meta property="og:description" content="Interactive hostel laundry slot booking, real-time machine availability, and schedule management application." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+
+    <!-- ==================== HEADER & NAVBAR ==================== -->
+    <header class="header-nav">
+      <div class="container nav-container">
+        <!-- Brand Logo -->
+        <a href="#hero" class="nav-brand">
+          <div class="logo-icon-wrap">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <rect x="4" y="2" width="16" height="20" rx="3" />
+              <circle cx="12" cy="13" r="5" />
+              <path d="M12 15a2 2 0 100-4 2 2 0 000 4z" />
+              <circle cx="8" cy="6" r="1" fill="currentColor" />
+              <circle cx="12" cy="6" r="1" fill="currentColor" />
+            </svg>
+          </div>
+          <div class="brand-info">
+            <span class="brand-name">HostelWash</span>
+            <span class="brand-sub">Campus Laundry Hub</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav>
+          <ul class="nav-links">
+            <li><a href="#dashboard" class="nav-link">Dashboard</a></li>
+            <li><a href="#machines" class="nav-link">Machines</a></li>
+            <li><a href="#book-slot" class="nav-link">Book a Slot</a></li>
+            <li>
+              <a href="#my-bookings" class="nav-link">
+                My Bookings
+                <span class="nav-badge" id="nav-bookings-count">0</span>
+              </a>
+            </li>
+            <li><a href="#guidelines" class="nav-link">Hostel Rules</a></li>
+          </ul>
+        </nav>
+
+        <!-- Right Side Nav Actions -->
+        <div class="nav-actions">
+          <div class="status-indicator-pill" title="Hostel laundry rooms are open for all residents">
+            <span class="pulse-dot"></span>
+            <span>Hall Open (Until 11 PM)</span>
+          </div>
+
+          <button type="button" class="btn btn-primary btn-sm" id="nav-book-btn">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Book Slot
+          </button>
+
+          <!-- Mobile Hamburger Toggle -->
+          <button type="button" class="mobile-menu-toggle icon-btn" id="mobile-menu-btn" aria-label="Toggle menu">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Navigation Drawer -->
+      <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+        <ul class="mobile-nav-list">
+          <li><a href="#dashboard" class="mobile-nav-link">Dashboard</a></li>
+          <li><a href="#machines" class="mobile-nav-link">Machines Listing</a></li>
+          <li><a href="#book-slot" class="mobile-nav-link">Book Laundry Slot</a></li>
+          <li>
+            <a href="#my-bookings" class="mobile-nav-link">
+              My Bookings
+              <span class="nav-badge" id="mobile-bookings-count">0</span>
+            </a>
+          </li>
+          <li><a href="#guidelines" class="mobile-nav-link">Hostel Guidelines</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main>
+
+      <!-- HERO / INTRO SECTION WITH INTERACTIVE WASHER ANIMATION -->
+      <section class="hero-section" id="hero">
+        <div class="container hero-grid">
+          <div class="hero-content">
+            <div class="hero-badge">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <span>Smart Hostel Living • Block A, B & Central Wing</span>
+            </div>
+
+            <h1 class="hero-title">
+              Hostel Laundry <span>Slot Manager</span>
+            </h1>
+
+            <p class="hero-description">
+              Stop waiting in long laundry queues or carrying heavy baskets to occupied washers. Check machine availability in real-time, reserve your washing slot, and prevent double bookings with instant conflict protection.
+            </p>
+
+            <div class="hero-cta-group">
+              <button type="button" class="btn btn-primary btn-lg" id="hero-book-cta">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Book a Slot Now
+              </button>
+
+              <button type="button" class="btn btn-secondary btn-lg" id="hero-explore-cta">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                Check Machine Status
+              </button>
+            </div>
+
+            <div class="hero-live-strip">
+              <div class="live-strip-item">
+                <svg width="18" height="18" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>Operating: <strong>06:00 AM – 11:00 PM</strong></span>
+              </div>
+              <div class="live-strip-divider"></div>
+              <div class="live-strip-item">
+                <svg width="18" height="18" fill="none" stroke="#10b981" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>No Double Booking Policy Active</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Intro Animation: Washing Machine Simulator -->
+          <div class="hero-visual-card">
+            <span class="interactive-hint">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+              </svg>
+              Interactive Washer Preview • Click Controls Below
+            </span>
+
+            <div class="washer-simulator">
+              <!-- Washer Top Control Panel -->
+              <div class="washer-top-panel">
+                <div class="washer-led-screen">
+                  <span class="washer-led-label" id="washer-display-mode">COTTON 40°</span>
+                  <span class="washer-led-time" id="washer-display-time">45 MIN</span>
+                </div>
+                <div class="washer-controls-mini">
+                  <div class="washer-knob" id="washer-knob" title="Cycle dial knob"></div>
+                </div>
+              </div>
+
+              <!-- Washer Door & Rotating Drum -->
+              <div class="washer-door-outer" id="washer-door" title="Click door to trigger spin & splash!">
+                <div class="washer-door-handle"></div>
+                <div class="washer-drum-glass">
+                  <!-- Water Sloshing Layer -->
+                  <div class="washer-water-layer"></div>
+
+                  <!-- Rotating Drum Clothes -->
+                  <div class="washer-drum-inner" id="washer-drum-inner">
+                    <div class="laundry-item laundry-1"></div>
+                    <div class="laundry-item laundry-2"></div>
+                    <div class="laundry-item laundry-3"></div>
+                    <div class="laundry-item laundry-4"></div>
+                  </div>
+
+                  <!-- Dynamic Soap Bubbles -->
+                  <div class="bubble-container" id="bubble-container"></div>
+                </div>
+              </div>
+
+              <!-- Base Strip -->
+              <div class="washer-bottom-strip"></div>
+            </div>
+
+            <!-- Simulator Interactive Action Buttons -->
+            <div class="simulator-actions">
+              <button type="button" class="control-btn" id="washer-spin-btn">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path d="M15.91 11.6l-6-3.46A1 1 0 008.5 9v6a1 1 0 001.41.86l6-3.46a1 1 0 000-1.8z" />
+                </svg>
+                Fast Spin
+              </button>
+
+              <button type="button" class="control-btn" id="washer-bubble-btn">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3" />
+                  <circle cx="18" cy="8" r="2" />
+                  <circle cx="6" cy="16" r="2" />
+                </svg>
+                Soap Bubbles
+              </button>
+
+              <button type="button" class="control-btn" id="washer-cycle-btn">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Cycle Mode
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 1. LAUNDRY DASHBOARD ==================== -->
+      <section class="section section-alt" id="dashboard">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-tag">Feature 1</span>
+            <h2 class="section-title">Hostel Laundry Dashboard</h2>
+            <p class="section-subtitle">
+              Live status overview of washing machines, available slots, and active bookings across campus hostels.
+            </p>
+          </div>
+
+          <!-- 4 Core Metric Cards -->
+          <div class="dashboard-metrics-grid">
+            <!-- Metric 1: Total Machines -->
+            <div class="metric-card card-total">
+              <div class="metric-card-top">
+                <div class="stat-icon-wrap">
+                  <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="4" y="2" width="16" height="20" rx="3" />
+                    <circle cx="12" cy="13" r="5" />
+                  </svg>
+                </div>
+                <span class="metric-trend-badge">Hostel Units</span>
+              </div>
+              <div class="metric-value-row">
+                <span class="metric-number" id="stat-total">10</span>
+                <span class="metric-label">Total Washing Machines</span>
+              </div>
+            </div>
+
+            <!-- Metric 2: Available Machines (Green) -->
+            <div class="metric-card card-available">
+              <div class="metric-card-top">
+                <div class="stat-icon-wrap">
+                  <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span class="metric-trend-badge">Ready to Wash</span>
+              </div>
+              <div class="metric-value-row">
+                <span class="metric-number" id="stat-available">6</span>
+                <span class="metric-label">Available Machines</span>
+              </div>
+            </div>
+
+            <!-- Metric 3: Booked Slots (Yellow/Amber) -->
+            <div class="metric-card card-booked">
+              <div class="metric-card-top">
+                <div class="stat-icon-wrap">
+                  <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                </div>
+                <span class="metric-trend-badge">Active Reserved</span>
+              </div>
+              <div class="metric-value-row">
+                <span class="metric-number" id="stat-booked">2</span>
+                <span class="metric-label">Booked Slots</span>
+              </div>
+            </div>
+
+            <!-- Metric 4: Out of Service (Red/Dark) -->
+            <div class="metric-card card-oos">
+              <div class="metric-card-top">
+                <div class="stat-icon-wrap">
+                  <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <span class="metric-trend-badge">Maintenance</span>
+              </div>
+              <div class="metric-value-row">
+                <span class="metric-number" id="stat-oos">2</span>
+                <span class="metric-label">Out of Service</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Occupancy Bar -->
+          <div class="occupancy-panel">
+            <div class="occupancy-header">
+              <div class="occupancy-title-wrap">
+                <svg width="20" height="20" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <h3 class="occupancy-title">Campus Laundry Availability Ratio</h3>
+              </div>
+              <span class="occupancy-summary" id="occupancy-percent-text">60% Ready for Laundry</span>
+            </div>
+
+            <div class="progress-bar-track">
+              <div class="progress-segment progress-segment-avail" id="progress-avail" style="width: 60%;" title="Available"></div>
+              <div class="progress-segment progress-segment-booked" id="progress-booked" style="width: 20%;" title="Booked"></div>
+              <div class="progress-segment progress-segment-oos" id="progress-oos" style="width: 20%;" title="Out of Service"></div>
+            </div>
+
+            <div class="occupancy-legend">
+              <div class="legend-item">
+                <span class="legend-color-dot dot-avail"></span>
+                <span>Available (Green)</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color-dot dot-booked"></span>
+                <span>Booked (Yellow)</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color-dot dot-oos"></span>
+                <span>Out of Service (Red)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Hostel Block Filters -->
+          <div class="quick-filter-strip" id="quick-block-filters">
+            <span class="filter-pill-label">Quick Block View:</span>
+            <button type="button" class="filter-btn active" data-block="ALL">All Blocks (10)</button>
+            <button type="button" class="filter-btn" data-block="Block A">Block A (4)</button>
+            <button type="button" class="filter-btn" data-block="Block B">Block B (3)</button>
+            <button type="button" class="filter-btn" data-block="Basement">Basement Central (3)</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 2 & 7. MACHINE LISTING WITH SEARCH & FILTER ==================== -->
+      <section class="section" id="machines">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-tag">Features 2 & 7</span>
+            <h2 class="section-title">Washing Machine Directory</h2>
+            <p class="section-subtitle">
+              Browse individual machines by number, type, floor location, and real-time status.
+            </p>
+          </div>
+
+          <!-- Search & Filter Bar -->
+          <div class="controls-card">
+            <div class="controls-main-row">
+              <!-- Search Bar -->
+              <div class="search-input-wrapper">
+                <svg class="search-icon-inside" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input
+                  type="text"
+                  class="search-input"
+                  id="machine-search-input"
+                  placeholder="Search by machine number (e.g. WM-101) or location..."
+                  aria-label="Search machines"
+                />
+                <button type="button" class="search-clear-btn" id="machine-search-clear-btn" title="Clear search">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Status Filter -->
+              <div>
+                <select class="filter-select" id="machine-status-filter" aria-label="Filter by Status">
+                  <option value="ALL">All Statuses</option>
+                  <option value="AVAILABLE">Available (Green)</option>
+                  <option value="BOOKED">Booked (Yellow)</option>
+                  <option value="OUT OF SERVICE">Out of Service (Red)</option>
+                </select>
+              </div>
+
+              <!-- Type Filter -->
+              <div>
+                <select class="filter-select" id="machine-type-filter" aria-label="Filter by Machine Type">
+                  <option value="ALL">All Machine Types</option>
+                  <option value="Front Load">Front Load</option>
+                  <option value="Top Load">Top Load</option>
+                  <option value="Heavy Duty Combo">Heavy Duty Combo</option>
+                </select>
+              </div>
+
+              <!-- Reset Button -->
+              <div>
+                <button type="button" class="btn btn-secondary btn-block" id="reset-filters-btn">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Reset
+                </button>
+              </div>
+            </div>
+
+            <!-- Controls Meta Bar -->
+            <div class="controls-meta-bar">
+              <span class="results-counter" id="machines-count-display">
+                Showing <strong>10</strong> of 10 machines
+              </span>
+              <span>Statuses automatically reflect your selected date and time slot.</span>
+            </div>
+          </div>
+
+          <!-- Machines Grid Container -->
+          <div class="machines-grid" id="machines-grid">
+            <!-- Dynamically populated by script.js -->
+          </div>
+
+          <!-- Empty State when search has 0 results -->
+          <div class="empty-state-card" id="machine-empty-state" style="display: none;">
+            <div class="empty-state-icon">
+              <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                <line x1="8" y1="11" x2="14" y2="11" />
+              </svg>
+            </div>
+            <h3 class="empty-state-title">No Machines Found</h3>
+            <p class="empty-state-desc">
+              We couldn't find any washing machine matching <strong id="empty-search-term">"xyz"</strong>. Please verify the machine ID or clear active filters.
+            </p>
+            <button type="button" class="btn btn-primary" id="empty-state-reset-btn">
+              Clear Search & Show All Machines
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 3, 4 & 5. DATE & TIME SELECTION + BOOK A SLOT ==================== -->
+      <section class="section section-alt" id="book-slot">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-tag">Features 3, 4 & 5</span>
+            <h2 class="section-title">Reserve a Laundry Slot</h2>
+            <p class="section-subtitle">
+              Pick your preferred date and time slot, enter student details, and secure your machine with instant double booking prevention.
+            </p>
+          </div>
+
+          <div class="booking-section-grid">
+            <!-- LEFT COLUMN: Date & Time Slot Interactive Selector -->
+            <div class="booking-panel-card">
+              <div class="panel-header-block">
+                <h3 class="panel-title">1. Choose Date & Time Slot</h3>
+                <p class="panel-subtitle">Select when you want to wash your clothes</p>
+              </div>
+
+              <!-- Date Picker Section -->
+              <div class="date-selector-group">
+                <div class="selector-label">
+                  <span>Selected Date:</span>
+                  <strong style="color: #2563eb;" id="form-date-display">Today</strong>
+                </div>
+
+                <div class="quick-days-row">
+                  <button type="button" class="day-choice-btn selected" data-day-index="0">
+                    <span class="day-name">Today</span>
+                    <span class="day-date">--</span>
+                  </button>
+                  <button type="button" class="day-choice-btn" data-day-index="1">
+                    <span class="day-name">Tomorrow</span>
+                    <span class="day-date">--</span>
+                  </button>
+                  <button type="button" class="day-choice-btn" data-day-index="2">
+                    <span class="day-name">Day After</span>
+                    <span class="day-date">--</span>
+                  </button>
+                </div>
+
+                <div class="custom-date-row">
+                  <span style="font-size: 0.8125rem; color: #64748b; font-weight: 600;">Or Pick Date:</span>
+                  <input type="date" class="date-input-field" id="custom-date-input" aria-label="Select booking date" />
+                </div>
+              </div>
+
+              <!-- Time Slots Grid -->
+              <div class="slots-grid-wrapper">
+                <div class="selector-label">
+                  <span>Available Time Slots (90 Mins Each):</span>
+                  <span style="font-size: 0.75rem; color: #64748b;" id="selected-slot-label">07:30 AM - 09:00 AM</span>
+                </div>
+
+                <div class="slots-grid" id="slots-grid">
+                  <!-- Dynamically rendered by script.js -->
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Booking Form -->
+            <div class="booking-panel-card">
+              <div class="panel-header-block">
+                <h3 class="panel-title">2. Student & Cycle Details</h3>
+                <p class="panel-subtitle">Fill your hostel information to complete booking</p>
+              </div>
+
+              <form class="booking-form" id="booking-form" novalidate>
+                <!-- Student Full Name -->
+                <div class="form-group">
+                  <label class="form-label" for="form-student-name">
+                    Student Full Name <span class="req-star">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-input"
+                    id="form-student-name"
+                    placeholder="e.g. Rahul Sharma"
+                    required
+                  />
+                  <span class="field-error-msg" id="name-error">Please enter your student name</span>
+                </div>
+
+                <!-- Hostel Room & Roll Number -->
+                <div class="form-group">
+                  <label class="form-label" for="form-room-no">
+                    Hostel Room No. & Roll No. <span class="req-star">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-input"
+                    id="form-room-no"
+                    placeholder="e.g. Room B-204 (2024CS042)"
+                    required
+                  />
+                  <span class="field-error-msg" id="room-error">Please enter your room and roll number</span>
+                </div>
+
+                <!-- Machine Selection -->
+                <div class="form-group">
+                  <label class="form-label" for="form-machine-select">
+                    Washing Machine <span class="req-star">*</span>
+                  </label>
+                  <select class="form-select" id="form-machine-select" required>
+                    <!-- Populated by script.js -->
+                  </select>
+                </div>
+
+                <!-- Cycle Preference -->
+                <div class="form-group">
+                  <label class="form-label" for="form-cycle-select">
+                    Wash Cycle Preference
+                  </label>
+                  <select class="form-select" id="form-cycle-select">
+                    <option value="Normal Cotton">Normal Cotton (45 mins • 40°C)</option>
+                    <option value="Quick Express">Quick Express (30 mins • 30°C)</option>
+                    <option value="Bedding / Sheets">Bedding / Heavy Sheets (60 mins • 60°C)</option>
+                    <option value="Delicates / Wool">Delicates / Wool (35 mins • Cold)</option>
+                  </select>
+                </div>
+
+                <!-- Summary Preview Box -->
+                <div class="booking-summary-box">
+                  <div class="summary-row">
+                    <span class="summary-label">Target Machine:</span>
+                    <span class="summary-val" id="summary-machine">WM-101 (Front Load)</span>
+                  </div>
+                  <div class="summary-row">
+                    <span class="summary-label">Scheduled Date:</span>
+                    <span class="summary-val" id="summary-date">Today</span>
+                  </div>
+                  <div class="summary-row">
+                    <span class="summary-label">Selected Slot:</span>
+                    <span class="summary-val" id="summary-slot">07:30 AM - 09:00 AM</span>
+                  </div>
+                </div>
+
+                <!-- Form Action Buttons -->
+                <div class="form-buttons-row">
+                  <button type="submit" class="btn btn-primary btn-block btn-lg" id="submit-booking-btn">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Confirm Laundry Booking
+                  </button>
+
+                  <button type="button" class="btn btn-secondary" id="reset-booking-btn" title="Reset form">
+                    Reset
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 6. MY BOOKINGS ==================== -->
+      <section class="section" id="my-bookings">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-tag">Feature 6</span>
+            <h2 class="section-title">My Laundry Bookings</h2>
+            <p class="section-subtitle">
+              Manage your active reservations, view digital laundry passes, or cancel slots to immediately free them for other students.
+            </p>
+          </div>
+
+          <!-- Controls for Bookings -->
+          <div class="my-bookings-controls">
+            <div class="bookings-search-wrap">
+              <svg class="search-icon-inside" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                class="search-input"
+                id="booking-search-input"
+                placeholder="Search by your name, room number, or booking ID..."
+                aria-label="Search my bookings"
+              />
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+              <select class="filter-select" id="booking-filter-status" aria-label="Filter bookings by status" style="width: auto;">
+                <option value="ALL">All Bookings</option>
+                <option value="UPCOMING">Upcoming Only</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Bookings Grid -->
+          <div class="bookings-grid" id="bookings-grid">
+            <!-- Dynamically populated by script.js -->
+          </div>
+
+          <!-- Empty Bookings State -->
+          <div class="empty-state-card" id="bookings-empty-state" style="display: none;">
+            <div class="empty-state-icon">
+              <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+            </div>
+            <h3 class="empty-state-title">No Active Bookings Found</h3>
+            <p class="empty-state-desc">
+              You don't have any reservations matching your search. Need clean clothes? Reserve an open slot in seconds!
+            </p>
+            <button type="button" class="btn btn-primary" id="bookings-empty-reset-btn">
+              Book a Laundry Slot Now
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== HOSTEL GUIDELINES ==================== -->
+      <section class="section section-alt" id="guidelines">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-tag">Campus Policy</span>
+            <h2 class="section-title">Hostel Laundry Guidelines</h2>
+            <p class="section-subtitle">
+              Please follow these shared hygiene and operational rules to keep the laundry service smooth for all hostel residents.
+            </p>
+          </div>
+
+          <div class="guidelines-grid">
+            <div class="rule-card">
+              <div class="rule-icon-box">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </div>
+              <h3 class="rule-title">10-Minute Punctuality Rule</h3>
+              <p class="rule-desc">
+                Arrive within 10 minutes of your booked slot. If unused after 15 minutes, the slot is automatically released to walk-in students.
+              </p>
+            </div>
+
+            <div class="rule-card">
+              <div class="rule-icon-box">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+              </div>
+              <h3 class="rule-title">Fair Usage Limit</h3>
+              <p class="rule-desc">
+                Students can have up to 2 active reservations per week to ensure every hostel wing resident gets access during peak hours.
+              </p>
+            </div>
+
+            <div class="rule-card">
+              <div class="rule-icon-box">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+              </div>
+              <h3 class="rule-title">Liquid Detergent Only</h3>
+              <p class="rule-desc">
+                Front-load washers require HE low-suds liquid detergent. Avoid harsh powders that clog the drainage pipes and filters.
+              </p>
+            </div>
+
+            <div class="rule-card">
+              <div class="rule-icon-box">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              </div>
+              <h3 class="rule-title">Prompt Collection</h3>
+              <p class="rule-desc">
+                Empty your clean laundry into your basket promptly at cycle completion so the next student can load their garments on time.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ==================== FOOTER (DARK THEME) ==================== -->
+    <footer class="site-footer">
+      <div class="container footer-main">
+        <div class="footer-grid">
+          <!-- Column 1: Hostel Info & Brand -->
+          <div class="footer-col">
+            <div class="footer-brand">
+              <div class="logo-icon-wrap" style="width: 2.2rem; height: 2.2rem;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <rect x="4" y="2" width="16" height="20" rx="3" />
+                  <circle cx="12" cy="13" r="5" />
+                </svg>
+              </div>
+              <span class="footer-brand-title">HostelWash Hub</span>
+            </div>
+            <p class="footer-text">
+              Official hostel laundry schedule manager for campus resident halls. Automated slot allocation, real-time machine monitoring, and conflict prevention.
+            </p>
+            <div style="font-size: 0.8125rem; color: #38bdf8;">
+              Central Laundry Office: Hall B • Ground Floor Room 004
+            </div>
+          </div>
+
+          <!-- Column 2: Navigation Links -->
+          <div class="footer-col">
+            <h4 class="footer-heading">Quick Navigation</h4>
+            <ul class="footer-links-list">
+              <li><a href="#hero" class="footer-link">Home / Intro</a></li>
+              <li><a href="#dashboard" class="footer-link">Laundry Dashboard</a></li>
+              <li><a href="#machines" class="footer-link">Machine Directory</a></li>
+              <li><a href="#book-slot" class="footer-link">Book a Slot</a></li>
+              <li><a href="#my-bookings" class="footer-link">Manage Bookings</a></li>
+              <li><a href="#guidelines" class="footer-link">Hostel Rules</a></li>
+            </ul>
+          </div>
+
+          <!-- Column 3: Contact & Helpdesk -->
+          <div class="footer-col">
+            <h4 class="footer-heading">Contact & Helpdesk</h4>
+            <div class="footer-contact-list">
+              <div class="contact-item">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                <span>Warden Helpline: <a href="tel:+15553829102">+1 (555) 382-9102</a></span>
+              </div>
+
+              <div class="contact-item">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span>Email: <a href="mailto:laundry.warden@campus.edu">laundry.warden@campus.edu</a></span>
+              </div>
+
+              <div class="contact-item">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>Hours: Mon–Sun: 06:00 AM – 11:00 PM</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 4: Maintenance Report Action -->
+          <div class="footer-col">
+            <h4 class="footer-heading">Malfunction Reporting</h4>
+            <p class="footer-text">
+              Notice a leaking pipe, vibrating drum, or faulty coin/card lock? Report it immediately to the hostel maintenance crew.
+            </p>
+            <button type="button" class="btn btn-secondary btn-sm" id="footer-report-btn">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              Report Machine Issue
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="container footer-bottom-container">
+          <span>&copy; 2026 Campus Hostel Laundry Management System. All rights reserved.</span>
+          <span>Designed for Block A, Block B & Central Wing Students</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ==================== MODALS & POP-UPS ==================== -->
+
+    <!-- 1. RED WARNING POP-UP MODAL FOR DOUBLE BOOKING (MANDATORY REQUIREMENT) -->
+    <div class="modal-overlay" id="double-booking-modal" role="dialog" aria-modal="true" aria-labelledby="db-modal-title">
+      <div class="modal-card">
+        <!-- Red Danger Warning Header -->
+        <div class="modal-danger-header">
+          <div class="modal-danger-icon-wrap">
+            <svg width="32" height="32" fill="none" stroke="#ffffff" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <div class="modal-header-text">
+            <h3 id="db-modal-title">Double Booking Prevented!</h3>
+            <p>This slot is already reserved by another student</p>
+          </div>
+          <button type="button" class="search-clear-btn visible" id="db-modal-close-top" style="color: #ffffff; position: absolute; top: 1rem; right: 1rem;" aria-label="Close alert">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="modal-warning-box">
+            <strong>Warning:</strong> The requested washing machine cannot be booked twice for the same date and time slot.
+          </div>
+
+          <!-- Conflict Details -->
+          <div class="conflict-details-grid">
+            <div class="conflict-item">
+              <span class="conflict-label">Machine ID</span>
+              <span class="conflict-val" id="db-conflict-machine">WM-103</span>
+            </div>
+            <div class="conflict-item">
+              <span class="conflict-label">Reserved Date</span>
+              <span class="conflict-val" id="db-conflict-date">Today</span>
+            </div>
+            <div class="conflict-item">
+              <span class="conflict-label">Time Slot</span>
+              <span class="conflict-val" id="db-conflict-slot">09:00 AM - 10:30 AM</span>
+            </div>
+            <div class="conflict-item">
+              <span class="conflict-label">Booked By</span>
+              <span class="conflict-val" id="db-conflict-student">Rahul Sharma (Room A-102)</span>
+            </div>
+          </div>
+
+          <!-- Alternative Suggestions -->
+          <div class="alt-machines-suggestion">
+            <span class="alt-title">Available alternative machines for this exact slot:</span>
+            <div class="alt-chips-row" id="db-alt-chips">
+              <!-- Dynamically populated chips -->
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="db-modal-dismiss-btn">
+            Choose Different Slot
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. CANCEL BOOKING CONFIRMATION MODAL -->
+    <div class="modal-overlay" id="cancel-modal" role="dialog" aria-modal="true" aria-labelledby="cancel-modal-title">
+      <div class="modal-card">
+        <div style="padding: 1.5rem 2rem; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 0.75rem;">
+          <div style="width: 2.75rem; height: 2.75rem; border-radius: 50%; background: #fee2e2; color: #ef4444; display: flex; align-items: center; justify-content: center;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="15" y1="9" x2="9" y2="15" />
+              <line x1="9" y1="9" x2="15" y2="15" />
+            </svg>
+          </div>
+          <div>
+            <h3 id="cancel-modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0f172a;">Cancel Laundry Slot?</h3>
+            <p style="font-size: 0.875rem; color: #64748b;">Cancelling will free this machine for other students immediately.</p>
+          </div>
+        </div>
+
+        <div class="modal-body">
+          <p id="cancel-modal-details" style="font-size: 0.9375rem; color: #334155; line-height: 1.6;">
+            <!-- Populated dynamically -->
+          </p>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancel-dismiss-btn">
+            Keep My Booking
+          </button>
+          <button type="button" class="btn btn-danger" id="cancel-confirm-btn">
+            Yes, Free Slot & Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. DIGITAL BOOKING PASS MODAL -->
+    <div class="modal-overlay" id="pass-modal" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="modal-body" id="pass-modal-content">
+          <!-- Populated dynamically with pass ticket -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="pass-print-btn">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polyline points="6 9 6 2 18 2 18 9" />
+              <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" />
+              <rect x="6" y="14" width="12" height="8" />
+            </svg>
+            Print / Save Pass
+          </button>
+          <button type="button" class="btn btn-primary" id="pass-close-btn">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. REPORT ISSUE MODAL -->
+    <div class="modal-overlay" id="report-issue-modal" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div style="padding: 1.5rem 2rem; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between;">
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: #0f172a;">Report Machine Malfunction</h3>
+          <button type="button" class="icon-btn" id="report-modal-close-btn" style="background: none; border: none; color: #64748b;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="report-machine-select">Select Machine</label>
+            <select class="form-select" id="report-machine-select"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="report-issue-desc">Issue Description</label>
+            <textarea
+              class="form-input"
+              id="report-issue-desc"
+              rows="3"
+              placeholder="e.g. Excessive shaking during spin cycle, drainage clogged, error code E04..."
+            ></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="report-cancel-btn">Cancel</button>
+          <button type="button" class="btn btn-danger" id="report-submit-btn">Submit Report</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+    <!-- Floating Scroll-To-Top Button -->
+    <button type="button" class="scroll-top-btn" id="scroll-top-btn" aria-label="Scroll to top" title="Scroll to top">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+      </svg>
+    </button>
+
+    <!-- JavaScript Entry Point (Vanilla JS, Zero external CDN) -->
+    <script src="./script.js"></script>
+  </body>
+</html>
